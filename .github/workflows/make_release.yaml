@@ -74,6 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          body: "Release of executable built for x64 Linux"
           files: bin/*
           fail_on_unmatched_files: true
           prerelease: false
