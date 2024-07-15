@@ -76,7 +76,6 @@ jobs:
         with:
           files: bin/*
           fail_on_unmatched_files: true
-          draft: true
           prerelease: false
           generate_release_notes: true
-          name: ${{ github.ref }} Release
+          name: ${{ github.ref_name }} Release
