@@ -19,6 +19,17 @@ jobs:
         run: |
           cd ${{ github.workspace }}/src
           make
+
+      - name: Tarball Binaries
+        run: |
+          cd ${{ github.workspace }}/src/bin
+          tar -cvf bin.tar ./bin
+
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: ${{ github.workspace }}/src/bin.tar
   
   test:
     runs-on: ubuntu-latest
@@ -39,8 +50,8 @@ jobs:
     needs: [build, test]
 
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       # - name: Inject slug/short variables
       #   uses: rlespinasse/github-slug-action@v4
@@ -51,11 +62,22 @@ jobs:
       #     VERSION="${GITHUB_REF_NAME_SLUG#v}"
       #     git archive -o ../vscoq-language-server-$VERSION.tar.gz --prefix=vscoq-language-server-$VERSION/ $GITHUB_SHA .
 
+      - name: Download Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: ${{ github.workspace }}/src/
+
+      - name: Extract Binaries
+        run: |
+          cd ${{ github.workspace }}/src
+          tar -xvf bin.tar 
+
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: src/test.out
+          files: src/bin/*
           fail_on_unmatched_files: true
           draft: true
           prerelease: false
