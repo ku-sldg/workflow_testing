@@ -22,7 +22,7 @@ jobs:
 
       - name: Tarball Binaries
         run: |
-          cd ${{ github.workspace }}/src/bin
+          cd ${{ github.workspace }}/src/
           tar -cvf bin.tar ./bin
 
       - name: Upload Binaries
