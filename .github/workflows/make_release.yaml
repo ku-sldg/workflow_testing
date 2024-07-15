@@ -50,9 +50,6 @@ jobs:
     needs: [build, test]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       # - name: Inject slug/short variables
       #   uses: rlespinasse/github-slug-action@v4
 
@@ -66,19 +63,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: binaries
-          path: ${{ github.workspace }}/src/
+          path: ${{ github.workspace }}
 
       - name: Extract Binaries
         run: |
-          cd ${{ github.workspace }}/src
+          cd ${{ github.workspace }}
           tar -xvf bin.tar 
 
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: src/bin/*
+          files: bin/*
           fail_on_unmatched_files: true
           draft: true
           prerelease: false
           generate_release_notes: true
+          name: ${{ github.ref }} Release
